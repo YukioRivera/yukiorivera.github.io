@@ -361,52 +361,53 @@ function generateHeatmap(img) {
         };
       });
       
-      // Generate a visual heatmap (simulated Grad-CAM)
-      function generateHeatmap(img) {
-        const canvas = document.getElementById('cam-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Adjust canvas size
-        const aspectRatio = img.width / img.height;
-        if (aspectRatio > 1) {
-          canvas.width = 300;
-          canvas.height = 300 / aspectRatio;
-        } else {
-          canvas.height = 300;
-          canvas.width = 300 * aspectRatio;
-        }
-        
-        // Draw original image
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        // Create heatmap effect
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        // Center the effect (simplified visualization)
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const maxDist = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2;
-        
-        for (let y = 0; y < canvas.height; y++) {
-          for (let x = 0; x < canvas.width; x++) {
-            const idx = (y * canvas.width + x) * 4;
-            
-            // Distance from center
-            const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-            const intensity = Math.max(0, 1 - distFromCenter / maxDist);
-            
-            if (intensity > 0.2) {
-              // Add a red-yellow overlay
-              data[idx] = Math.min(255, data[idx] + intensity * 150);
-              data[idx + 1] = Math.min(255, data[idx + 1] + intensity * 100);
-              // Blue stays the same or decreases
-            }
+    // Generate a visual heatmap (simulated Grad-CAM)
+    function generateHeatmap(img) {
+      const canvas = document.getElementById('cam-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Adjust canvas size
+      const aspectRatio = img.width / img.height;
+      if (aspectRatio > 1) {
+        canvas.width = 300;
+        canvas.height = 300 / aspectRatio;
+      } else {
+        canvas.height = 300;
+        canvas.width = 300 * aspectRatio;
+      }
+      
+      // Draw original image
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Create heatmap effect
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      // Center the effect (simplified visualization)
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const maxDist = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2;
+      
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          const idx = (y * canvas.width + x) * 4;
+          
+          // Distance from center
+          const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+          const intensity = Math.max(0, 1 - distFromCenter / maxDist);
+          
+          if (intensity > 0.2) {
+            // Add a red-yellow overlay
+            // More red for higher intensity areas
+            data[idx] = Math.min(255, data[idx] + intensity * 180);     // Red
+            data[idx + 1] = Math.min(255, data[idx + 1] + intensity * 100); // Green
+            // Keep blue the same or slightly reduce it
           }
         }
-        
-        ctx.putImageData(imageData, 0, 0);
       }
+      
+      ctx.putImageData(imageData, 0, 0);
+    }
     });
   </script>
   
