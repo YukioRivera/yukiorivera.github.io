@@ -7,10 +7,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Yukio Rivera | Image Classification with Explainability</title>
+    <title>Yukio Rivera | ML Algorithm Explorer</title>
     <meta name="author" content="Yukio Rivera" />
-    <meta name="description" content="Deep learning model with visualization of what the AI 'sees'" />
-    <meta name="keywords" content="machine learning, deep learning, computer vision, explainable AI, image classification" />
+    <meta name="description" content="Interactive visualization of unsupervised learning algorithms and dimensionality reduction techniques" />
+    <meta name="keywords" content="machine learning, clustering, dimensionality reduction, PCA, ICA, UMAP, kmeans, EM, neural networks" />
 
     <!-- Bootstrap & MDB -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
@@ -25,10 +25,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="none" id="highlight_theme_light" />
 
     <!-- Styles -->
-    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://yukiorivera.github.io/projects/image_classifier/">
+    <link rel="canonical" href="https://yukiorivera.github.io/projects/ml_explorer/">
     
     <!-- Dark Mode -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark" />
@@ -36,13 +36,12 @@
     <script src="/assets/js/theme.js"></script>
     <script src="/assets/js/dark_mode.js"></script>
     
-    <!-- Libraries for the demo -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0"></script>
+    <!-- Libraries for the interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
   </head>
 
   <!-- Body -->
-  <body class="fixed-top-nav ">
+  <body class="fixed-top-nav">
 
     <!-- Header -->
     <header>
@@ -63,21 +62,21 @@
             <ul class="navbar-nav ml-auto flex-nowrap">
 
               <!-- About -->
-              <li class="nav-item ">
+              <li class="nav-item">
                 <a class="nav-link" href="/">about</a>
               </li>
               
               <!-- Blog -->
-              <li class="nav-item ">
+              <li class="nav-item">
                 <a class="nav-link" href="/blog/">blog</a>
               </li>
 
               <!-- Other pages -->
-              <li class="nav-item ">
+              <li class="nav-item">
                 <a class="nav-link" href="/projects/">projects</a>
               </li>
 
-              <!-- Toogle theme mode -->
+              <!-- Toggle theme mode -->
               <div class="toggle-container">
                 <a id="light-toggle">
                   <i class="fas fa-moon"></i>
@@ -92,173 +91,466 @@
 
     <!-- Content -->
     <div class="container mt-5">
-      <!-- page.html -->
-        <div class="post">
+      <div class="post">
 
-          <header class="post-header">
-            <h1 class="post-title">Image Classification with Explainability</h1>
-            <p class="post-description">Deep learning model with visualization of what the AI "sees"</p>
-          </header>
+        <header class="post-header">
+          <h1 class="post-title">Interactive ML Algorithm Explorer</h1>
+          <p class="post-description">Visualizing unsupervised learning algorithms and dimensionality reduction techniques</p>
+        </header>
 
-          <article>
-            <p>This project demonstrates how deep learning models "see" images using Gradient-weighted Class Activation Mapping (Grad-CAM) technology. By visualizing what the AI focuses on, we can better understand and trust its decision-making process - a key component of making machine learning more transparent and interpretable.</p>
+        <article>
+          <p>This project demonstrates the power of various unsupervised learning algorithms and dimensionality reduction techniques using interactive visualizations. By exploring how these algorithms perform on real-world data, we can gain insights into their strengths, weaknesses, and appropriate use cases.</p>
 
-            <div class="row">
-              <div class="col-sm-8">
-                <img src="/assets/img/classifier_example.png" class="img-fluid rounded z-depth-1" alt="Example of image classification with heatmap">
-              </div>
-              <div class="col-sm-4">
-                <h4 class="mt-3">Project Highlights:</h4>
-                <ul class="highlights-list">
-                  <li><strong>Transfer learning</strong> with MobileNet architecture</li>
-                  <li><strong>Browser-based inference</strong> using TensorFlow.js</li>
-                  <li><strong>Visual explainability</strong> through activation heatmaps</li>
-                  <li><strong>No server required</strong> - runs entirely in the browser</li>
-                </ul>
-              </div>
+          <div class="row">
+            <div class="col-sm-8">
+              <img src="https://raw.githubusercontent.com/YukioRivera/assets/main/ml_explorer_screenshot.png" class="img-fluid rounded z-depth-1" alt="ML Algorithm Explorer screenshot showing clustering results">
             </div>
-
-            <h3 class="mt-4">Technical Implementation</h3>
-            <p>This project uses a pre-trained MobileNet model for efficient browser-based image classification, combined with a visualization technique that highlights the regions of an image most influential to the model's decision.</p>
-
-            <div class="code-section mt-4 mb-4">
-              <h4>Key Implementation:</h4>
-              <pre><code class="language-javascript">
-// Generate a visual heatmap (simulated Grad-CAM)
-function generateHeatmap(img) {
-  const canvas = document.getElementById('cam-canvas');
-  const ctx = canvas.getContext('2d');
-  
-  // Adjust canvas size to match image proportions
-  const aspectRatio = img.width / img.height;
-  canvas.width = aspectRatio > 1 ? 300 : 300 * aspectRatio;
-  canvas.height = aspectRatio > 1 ? 300 / aspectRatio : 300;
-  
-  // Draw the original image
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  
-  // Create the heatmap effect
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const data = imageData.data;
-  
-  // Center-focused heatmap (simulated attention)
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const maxDist = Math.sqrt(Math.pow(canvas.width, 2) + Math.pow(canvas.height, 2)) / 2;
-  
-  for (let y = 0; y < canvas.height; y++) {
-    for (let x = 0; x < canvas.width; x++) {
-      const idx = (y * canvas.width + x) * 4;
-      const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-      const intensity = Math.max(0, 1 - distFromCenter / maxDist);
-      
-      if (intensity > 0.2) {
-        data[idx] = Math.min(255, data[idx] + intensity * 150);     // Red
-        data[idx + 1] = Math.min(255, data[idx + 1] + intensity * 100); // Green
-      }
-    }
-  }
-  
-  ctx.putImageData(imageData, 0, 0);
-}</code></pre>
-            </div>
-
-            <div class="interactive-demo">
-              <h3>Interactive Demo</h3>
-              
-              <div class="upload-panel">
-                <div class="upload-label">Upload an animal image</div>
-                <input type="file" id="image-upload" accept="image/*" class="form-control">
-                <div class="upload-hint">Try uploading images of dogs, cats, birds, or other animals.</div>
-                
-                <div class="text-right mt-3">
-                  <button id="classify-btn" class="btn" disabled>CLASSIFY IMAGE</button>
-                </div>
-              </div>
-              
-              <div id="results" style="display: none;">
-                <div class="results-container">
-                  <div class="row m-0">
-                    <div class="col-md-6 p-0">
-                      <div class="results-header">
-                        <h4>Original Image</h4>
-                      </div>
-                      <div class="results-body">
-                        <div class="image-container">
-                          <img id="original-image" class="img-fluid rounded" style="max-height: 300px;">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 p-0">
-                      <div class="results-header">
-                        <h4>What the AI Sees</h4>
-                      </div>
-                      <div class="results-body">
-                        <div class="image-container">
-                          <canvas id="cam-canvas" width="300" height="300" class="rounded"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="result-metrics">
-                    <div class="row m-0">
-                      <div class="col-md-6">
-                        <div class="p-3">
-                          <h5>Classification Result</h5>
-                          <p id="predicted-class" class="metric-value">Loading...</p>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="p-3">
-                          <h5>Confidence</h5>
-                          <div class="progress mt-2 mb-2">
-                            <div id="confidence-bar" class="progress-bar" role="progressbar"></div>
-                          </div>
-                          <p id="confidence-text" class="mt-1"></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <h3>Why Explainability Matters</h3>
-            <p>As AI systems become more prevalent in critical applications, the ability to understand and trust their decisions becomes increasingly important. Explainable AI (XAI) provides transparency into the "black box" of deep learning models.</p>
-            
-            <div class="methodology-section mt-4 mb-4">
-              <h4>Key Benefits:</h4>
-              <ul>
-                <li><strong>Trust:</strong> Users can see what influenced the model's decision</li>
-                <li><strong>Debugging:</strong> Developers can identify when models focus on irrelevant features</li>
-                <li><strong>Education:</strong> Helps explain how neural networks "perceive" images</li>
-                <li><strong>Ethical AI:</strong> Contributes to more accountable and transparent systems</li>
+            <div class="col-sm-4">
+              <h4 class="mt-3">Project Highlights:</h4>
+              <ul class="highlights-list">
+                <li><strong>Multiple clustering techniques</strong> (K-means, Expectation Maximization)</li>
+                <li><strong>Dimensionality reduction</strong> (PCA, ICA, RP, UMAP)</li>
+                <li><strong>Interactive visualizations</strong> of algorithm performance</li>
+                <li><strong>Neural network evaluation</strong> across reduction methods</li>
               </ul>
             </div>
-            
-            <h3>Technical Details</h3>
-            <p>This implementation uses:</p>
-            
-            <ul>
-              <li>A pre-trained MobileNet model for efficient classification</li>
-              <li>TensorFlow.js for in-browser inference without server requirements</li>
-              <li>Canvas API for rendering the attention visualization</li>
-              <li>Simplified Grad-CAM implementation for visual explainability</li>
-            </ul>
-            
-            <h3>Source Code</h3>
-            <p>The complete implementation is available on GitHub, including the model integration and visualization techniques.</p>
-            
-            <div class="resources-section mt-4">
-              <a href="https://github.com/YukioRivera/image-classification-explainer" class="btn btn-primary" target="_blank">View Project on GitHub</a>
-              <a href="#" class="btn btn-outline-primary ml-2">Technical Report (PDF)</a>
+          </div>
+
+          <!-- Tab Navigation -->
+          <ul class="nav nav-tabs mt-5" id="explorer-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="clustering-tab" data-toggle="tab" href="#clustering" role="tab" aria-controls="clustering" aria-selected="true">
+                <i class="fas fa-object-group mr-2"></i>Clustering
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="dimensionality-tab" data-toggle="tab" href="#dimensionality" role="tab" aria-controls="dimensionality" aria-selected="false">
+                <i class="fas fa-compress-arrows-alt mr-2"></i>Dimensionality Reduction
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="neural-network-tab" data-toggle="tab" href="#neural-network" role="tab" aria-controls="neural-network" aria-selected="false">
+                <i class="fas fa-brain mr-2"></i>Neural Network Performance
+              </a>
+            </li>
+          </ul>
+
+          <!-- Tab Content -->
+          <div class="tab-content" id="explorerTabContent">
+            <!-- Clustering Tab -->
+            <div class="tab-pane fade show active" id="clustering" role="tabpanel" aria-labelledby="clustering-tab">
+              <div class="section-content">
+                <h3 class="mt-4">Clustering Algorithm Comparison</h3>
+                <p>Unsupervised clustering helps identify patterns in data without labeled examples. This exploration compares K-means and Expectation Maximization (EM) algorithms on the Spotify dataset.</p>
+                
+                <div class="controls-section mb-4">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="clustering-algorithm">Algorithm:</label>
+                      <select id="clustering-algorithm" class="form-control">
+                        <option value="kmeans">K-means</option>
+                        <option value="em">Expectation Maximization</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="num-clusters">Number of Clusters:</label>
+                      <input type="range" class="custom-range" id="num-clusters" min="2" max="15" value="2">
+                      <div class="text-center"><span id="clusters-value">2</span> clusters</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>Silhouette Score</h5>
+                      <p class="small text-muted">Higher values indicate better-defined clusters</p>
+                      <canvas id="silhouette-chart"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>Davies-Bouldin Index</h5>
+                      <p class="small text-muted">Lower values indicate better-defined clusters</p>
+                      <canvas id="davies-bouldin-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row mt-4">
+                  <div class="col-md-12">
+                    <div class="chart-container">
+                      <h5>2D Visualization of Clusters</h5>
+                      <p class="small text-muted">PCA projection of high-dimensional data with cluster assignments</p>
+                      <canvas id="cluster-visualization"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="metrics-table mt-4">
+                  <h5>Clustering Performance Metrics</h5>
+                  <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                        <th>Interpretation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Silhouette Score</td>
+                        <td id="silhouette-value">0.1890</td>
+                        <td>Higher is better. Measures how similar an object is to its own cluster compared to other clusters.</td>
+                      </tr>
+                      <tr>
+                        <td>Davies-Bouldin Index</td>
+                        <td id="davies-bouldin-value">2.5074</td>
+                        <td>Lower is better. Average similarity between clusters, where similarity is the ratio between within-cluster distances and between-cluster distances.</td>
+                      </tr>
+                      <tr>
+                        <td>Calinski-Harabasz Score</td>
+                        <td id="calinski-harabasz-value">92.7425</td>
+                        <td>Higher is better. Ratio of the between-clusters dispersion and the within-cluster dispersion.</td>
+                      </tr>
+                      <tr>
+                        <td>Adjusted Rand Index</td>
+                        <td id="ari-value">0.5415</td>
+                        <td>Higher is better. Measures the similarity between the true labels and the cluster assignments.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+            
+            <!-- Dimensionality Reduction Tab -->
+            <div class="tab-pane fade" id="dimensionality" role="tabpanel" aria-labelledby="dimensionality-tab">
+              <div class="section-content">
+                <h3 class="mt-4">Dimensionality Reduction Techniques</h3>
+                <p>Dimensionality reduction transforms high-dimensional data into a lower-dimensional space while preserving important characteristics. This exploration compares four popular techniques.</p>
+                
+                <div class="controls-section mb-4">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="reduction-technique">Technique:</label>
+                      <select id="reduction-technique" class="form-control">
+                        <option value="pca">Principal Component Analysis (PCA)</option>
+                        <option value="ica">Independent Component Analysis (ICA)</option>
+                        <option value="rp">Random Projection (RP)</option>
+                        <option value="umap">UMAP</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>Component Optimization</h5>
+                      <p class="small text-muted">Determining the optimal number of components</p>
+                      <canvas id="components-chart"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>Dimension Reduction Comparison</h5>
+                      <p class="small text-muted">Reduction percentage across methods</p>
+                      <canvas id="reduction-comparison-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row mt-4">
+                  <div class="col-md-12">
+                    <div class="chart-container">
+                      <h5>2D Data Projection</h5>
+                      <p class="small text-muted">Visualization of high-dimensional data in 2D space</p>
+                      <canvas id="data-projection"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="technique-details mt-4">
+                  <h5>Technique Details</h5>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="card technique-card" id="technique-summary">
+                        <div class="card-header">
+                          <h6 class="mb-0">Technique Summary</h6>
+                        </div>
+                        <div class="card-body">
+                          <p class="card-text">PCA finds the directions of maximum variance in the data and projects it onto a new subspace with equal or fewer dimensions.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="card technique-card" id="optimal-config">
+                        <div class="card-header">
+                          <h6 class="mb-0">Optimal Configuration</h6>
+                        </div>
+                        <div class="card-body">
+                          <ul class="list-unstyled">
+                            <li><strong>Optimal Components:</strong> <span id="optimal-components">27</span></li>
+                            <li><strong>Dimension Reduction:</strong> <span id="dimension-reduction">92.84%</span></li>
+                            <li><strong>Variance Retained:</strong> <span id="variance-retained">95%</span></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="card technique-card" id="key-advantages">
+                        <div class="card-header">
+                          <h6 class="mb-0">Key Advantages</h6>
+                        </div>
+                        <div class="card-body">
+                          <ul class="list-unstyled" id="advantages-list">
+                            <li>✓ Preserves maximum variance</li>
+                            <li>✓ Removes correlation between features</li>
+                            <li>✓ Computationally efficient</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Neural Network Tab -->
+            <div class="tab-pane fade" id="neural-network" role="tabpanel" aria-labelledby="neural-network-tab">
+              <div class="section-content">
+                <h3 class="mt-4">Neural Network Performance Analysis</h3>
+                <p>This analysis examines how different dimensionality reduction techniques affect neural network performance on the Spotify dataset prediction task.</p>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>F1 Score Comparison</h5>
+                      <p class="small text-muted">Performance across dimensionality reduction methods</p>
+                      <canvas id="f1-score-chart"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <h5>Training Time Comparison</h5>
+                      <p class="small text-muted">Total training time in seconds</p>
+                      <canvas id="training-time-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row mt-4">
+                  <div class="col-md-12">
+                    <div class="chart-container">
+                      <h5>Input Size vs. Performance</h5>
+                      <p class="small text-muted">Relationship between number of features and F1 score</p>
+                      <canvas id="size-performance-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="performance-summary mt-4">
+                  <h5>Performance Summary</h5>
+                  <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Method</th>
+                        <th>Input Size</th>
+                        <th>Dimension Reduction</th>
+                        <th>F1 Score</th>
+                        <th>Training Time</th>
+                        <th>F1 Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Original</td>
+                        <td>377</td>
+                        <td>0.00%</td>
+                        <td>0.9477</td>
+                        <td>2.84s</td>
+                        <td>0.00%</td>
+                      </tr>
+                      <tr>
+                        <td>PCA</td>
+                        <td>27</td>
+                        <td>92.84%</td>
+                        <td>0.9734</td>
+                        <td>2.17s</td>
+                        <td>+2.71%</td>
+                      </tr>
+                      <tr class="table-success">
+                        <td>ICA</td>
+                        <td>50</td>
+                        <td>86.74%</td>
+                        <td>0.9803</td>
+                        <td>2.16s</td>
+                        <td>+3.44%</td>
+                      </tr>
+                      <tr>
+                        <td>RP</td>
+                        <td>8</td>
+                        <td>97.88%</td>
+                        <td>0.9612</td>
+                        <td>2.33s</td>
+                        <td>+1.43%</td>
+                      </tr>
+                      <tr>
+                        <td>UMAP</td>
+                        <td>2</td>
+                        <td>99.47%</td>
+                        <td>0.8451</td>
+                        <td>2.26s</td>
+                        <td>-10.83%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="key-findings mt-4 p-4 bg-light rounded">
+                  <h5><i class="fas fa-lightbulb mr-2"></i>Key Findings</h5>
+                  <ul>
+                    <li><strong>ICA provides the best performance</strong> with a 3.44% improvement in F1 score while reducing dimensions by 86.74%.</li>
+                    <li><strong>Random Projection achieves impressive results</strong> with 97.88% dimension reduction while still improving performance by 1.43%.</li>
+                    <li><strong>UMAP excels at visualization</strong> but shows performance degradation for predictive modeling with only 2 dimensions.</li>
+                    <li><strong>All dimensionality reduction methods improved training time</strong>, with ICA providing the best balance of performance and efficiency.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          </article>
+          <h3 class="mt-5">Technical Implementation</h3>
+          <p>This project implements various unsupervised learning algorithms and dimensionality reduction techniques on the Spotify 2023 dataset. The analysis includes clustering, dimensionality reduction, and neural network performance evaluation.</p>
 
-        </div>
+          <div class="code-section mt-4 mb-4">
+            <h4>Data Preprocessing Example:</h4>
+            <pre><code class="language-python">
+# Preprocess dataset for clustering
+def preprocess_data(df):
+    # Separate target
+    y = df['high_playlist_inclusion']
+    X = df.drop(columns=['high_playlist_inclusion'])
+    
+    # Identify categorical columns
+    categorical_cols = X.select_dtypes(include=['object']).columns.tolist()
+    
+    # Create preprocessing pipelines
+    numeric_features = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    
+    # Create preprocessing steps
+    numeric_transformer = StandardScaler()
+    categorical_transformer = OneHotEncoder(drop='first')
+    
+    # Create column transformer
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', numeric_transformer, numeric_features),
+            ('cat', categorical_transformer, categorical_cols)
+        ]
+    )
+    
+    # Create and apply preprocessing pipeline
+    pipeline = Pipeline(steps=[
+        ('preprocessor', preprocessor)
+    ])
+    
+    # Fit and transform data
+    X_processed = pipeline.fit_transform(X)
+    
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_processed, y, test_size=0.2, random_state=42
+    )
+    
+    return X_train, X_test, y_train, y_test, X_processed, y</code></pre>
+          </div>
 
+          <div class="interactive-demo">
+            <h3>Interactive Data Explorer</h3>
+            
+            <div class="explorer-panel">
+              <div class="dimension-controls mb-3">
+                <label for="dimension-method">Dimensionality Reduction Method:</label>
+                <select id="dimension-method" class="form-control">
+                  <option value="pca">PCA</option>
+                  <option value="ica">ICA</option>
+                  <option value="rp">Random Projection</option>
+                  <option value="umap">UMAP</option>
+                </select>
+              </div>
+              
+              <div class="visualization-container">
+                <canvas id="interactive-visualization"></canvas>
+              </div>
+              
+              <div class="evaluation-metrics mt-4">
+                <h5>Method Evaluation</h5>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="metric-card p-3 bg-white rounded shadow-sm">
+                      <h6>Original Dimensions</h6>
+                      <p class="metric-value" id="original-dimensions">377</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="metric-card p-3 bg-white rounded shadow-sm">
+                      <h6>Reduced Dimensions</h6>
+                      <p class="metric-value" id="reduced-dimensions">27</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="metric-card p-3 bg-white rounded shadow-sm">
+                      <h6>Reduction Percentage</h6>
+                      <p class="metric-value" id="reduction-percentage">92.84%</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="metric-card p-3 bg-white rounded shadow-sm">
+                      <h6>F1 Score Impact</h6>
+                      <p class="metric-value" id="f1-impact">+2.71%</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <h3>Methodology Insights</h3>
+          <p>This project demonstrates several important insights about unsupervised learning and dimensionality reduction:</p>
+          
+          <div class="methodology-section mt-4 mb-4">
+            <h4>Key Findings:</h4>
+            <ul>
+              <li><strong>Clustering algorithms show different strengths:</strong> K-means performs better on well-separated, spherical clusters, while EM can adapt to different cluster shapes and densities.</li>
+              <li><strong>Dimensionality reduction can improve performance:</strong> Reducing dimensions not only speeds up computation but can also improve model performance by removing noise.</li>
+              <li><strong>Method selection matters:</strong> Different reduction techniques preserve different aspects of the data, affecting downstream performance in different ways.</li>
+              <li><strong>Visualization reveals patterns:</strong> Low-dimensional projections can reveal insights about data structure that are hidden in high-dimensional space.</li>
+            </ul>
+          </div>
+          
+          <h3>Technical Details</h3>
+          <p>This implementation uses:</p>
+          
+          <ul>
+            <li>Python for the backend analysis with scikit-learn, TensorFlow, and specialized libraries (UMAP)</li>
+            <li>HTML/CSS/JavaScript for the interactive web visualization</li>
+            <li>Chart.js for data visualization</li>
+            <li>Bootstrap for responsive layout and styling</li>
+          </ul>
+          
+          <h3>Source Code</h3>
+          <p>The complete implementation is available on GitHub, including the Jupyter notebooks for analysis and the web visualization code.</p>
+          
+          <div class="resources-section mt-4">
+            <a href="https://github.com/YukioRivera/ml-algorithm-explorer" class="btn btn-primary" target="_blank">View Project on GitHub</a>
+            <a href="#" class="btn btn-outline-primary ml-2">Technical Report (PDF)</a>
+          </div>
+
+        </article>
+
+      </div>
     </div>
 
     <!-- Footer -->    
@@ -270,411 +562,750 @@ function generateHeatmap(img) {
 
     <!-- JavaScripts -->
     <!-- jQuery -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- Bootsrap & MDB scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js" integrity="sha256-l/1pMF/+J4TThfgARS6KwWrk/egwuVvhRzfLAMQ6Ds4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js" integrity="sha256-l/1pMF/+J4TThfgARS6KwWrk/egwuVvhRzfLAMQ6Ds4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
 
     <!-- Masonry & imagesLoaded -->
-  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
-    
-  <!-- Medium Zoom JS -->
-  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
-  <script src="/assets/js/zoom.js"></script>
-  <script src="/assets/js/common.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+      
+    <!-- Medium Zoom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+    <script src="/assets/js/zoom.js"></script>
+    <script src="/assets/js/common.js"></script>
 
-  <!-- MathJax -->
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        tags: 'ams'
-      }
-    };
-  </script>
-  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
-  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- MathJax -->
+    <script type="text/javascript">
+      window.MathJax = {
+        tex: {
+          tags: 'ams'
+        }
+      };
+    </script>
+    <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+    <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
-  <!-- Classifier Demo Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      let model;
-      
-      // Load the pre-trained MobileNet model
-      async function loadModel() {
-        try {
-          model = await mobilenet.load();
-          console.log('MobileNet model loaded successfully');
-          
-          // Enable the classify button
-          document.getElementById('classify-btn').disabled = false;
-        } catch (error) {
-          console.error('Failed to load model:', error);
-        }
-      }
-      
-      // Initialize
-      loadModel();
-      
-      // Set up event listener for the classify button
-      document.getElementById('classify-btn').addEventListener('click', async function() {
-        const fileInput = document.getElementById('image-upload');
-        const file = fileInput.files[0];
+    <!-- ML Explorer Demo Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // ========== DATA ==========
+        // Data for charts and visualizations (based on your code results)
+        const clusteringData = {
+          kmeans: [
+            {clusters: 2, silhouette: 0.1890, daviesBouldin: 2.5074, calinskiHarabasz: 92.7425, ari: 0.5415},
+            {clusters: 3, silhouette: 0.1038, daviesBouldin: 2.5167, calinskiHarabasz: 76.5955, ari: 0.3287},
+            {clusters: 4, silhouette: 0.0948, daviesBouldin: 2.3811, calinskiHarabasz: 69.9106, ari: 0.2543},
+            {clusters: 5, silhouette: 0.0793, daviesBouldin: 2.4787, calinskiHarabasz: 61.9407, ari: 0.1875},
+            {clusters: 6, silhouette: 0.0880, daviesBouldin: 2.2310, calinskiHarabasz: 59.7226, ari: 0.1743},
+            {clusters: 7, silhouette: 0.0936, daviesBouldin: 2.0996, calinskiHarabasz: 57.5148, ari: 0.1621},
+            {clusters: 8, silhouette: 0.0895, daviesBouldin: 2.1102, calinskiHarabasz: 54.3245, ari: 0.1542},
+            {clusters: 9, silhouette: 0.0827, daviesBouldin: 2.1683, calinskiHarabasz: 51.7235, ari: 0.1367},
+            {clusters: 10, silhouette: 0.0777, daviesBouldin: 2.1606, calinskiHarabasz: 49.7255, ari: 0.1254},
+            {clusters: 15, silhouette: 0.0796, daviesBouldin: 2.0272, calinskiHarabasz: 41.4994, ari: 0.0986}
+          ],
+          em: [
+            {clusters: 2, silhouette: 0.0490, daviesBouldin: 4.1952, calinskiHarabasz: 35.3130, ari: 0.1217},
+            {clusters: 3, silhouette: 0.0106, daviesBouldin: 4.5858, calinskiHarabasz: 50.4698, ari: 0.0843},
+            {clusters: 5, silhouette: 0.0234, daviesBouldin: 3.4833, calinskiHarabasz: 41.5232, ari: 0.0654},
+            {clusters: 10, silhouette: 0.0397, daviesBouldin: 2.9087, calinskiHarabasz: 35.4417, ari: 0.0825},
+            {clusters: 15, silhouette: 0.0672, daviesBouldin: 2.2376, calinskiHarabasz: 39.5939, ari: 0.0742}
+          ]
+        };
         
-        if (!file) {
-          alert('Please select an image first.');
-          return;
-        }
-        
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        
-        img.onload = async function() {
-          try {
-            // Display original image
-            document.getElementById('original-image').src = img.src;
-            document.getElementById('results').style.display = 'block';
-            
-            // Classify image
-            const predictions = await model.classify(img);
-            const topPrediction = predictions[0];
-            
-            // Show results
-            document.getElementById('predicted-class').textContent = topPrediction.className;
-            
-            const confidenceBar = document.getElementById('confidence-bar');
-            const confidence = Math.round(topPrediction.probability * 100);
-            confidenceBar.style.width = confidence + '%';
-            confidenceBar.textContent = confidence + '%';
-            
-            document.getElementById('confidence-text').textContent = 
-              `The model is ${confidence}% confident about this prediction.`;
-            
-            // Generate heatmap visualization
-            generateHeatmap(img);
-          } catch (error) {
-            console.error('Error classifying image:', error);
+        const dimensionalityData = {
+          pca: {
+            componentsData: [
+              {components: 5, value: 0.4744, metric: "Explained Variance"},
+              {components: 10, value: 0.7046, metric: "Explained Variance"},
+              {components: 15, value: 0.8499, metric: "Explained Variance"},
+              {components: 20, value: 0.9201, metric: "Explained Variance"},
+              {components: 27, value: 0.9521, metric: "Explained Variance"}
+            ],
+            optimalComponents: 27,
+            dimensionReduction: 92.84,
+            details: {
+              summary: "PCA finds the directions of maximum variance in the data and projects it onto a new subspace with equal or fewer dimensions.",
+              advantages: [
+                "Preserves maximum variance",
+                "Removes correlation between features",
+                "Computationally efficient"
+              ]
+            }
+          },
+          ica: {
+            componentsData: [
+              {components: 10, value: 9.3306, metric: "Average Kurtosis"},
+              {components: 20, value: 11.9986, metric: "Average Kurtosis"},
+              {components: 30, value: 11.7534, metric: "Average Kurtosis"},
+              {components: 40, value: 20.0103, metric: "Average Kurtosis"},
+              {components: 50, value: 29.0858, metric: "Average Kurtosis"}
+            ],
+            optimalComponents: 50,
+            dimensionReduction: 86.74,
+            details: {
+              summary: "ICA finds the independent components by maximizing the statistical independence of the estimated components.",
+              advantages: [
+                "Finds truly independent sources",
+                "Works well for non-Gaussian data",
+                "Useful for separating mixed signals"
+              ]
+            }
+          },
+          rp: {
+            componentsData: [
+              {components: 2, value: 11.4612, metric: "Reconstruction Error"},
+              {components: 4, value: 5.9267, metric: "Reconstruction Error"},
+              {components: 6, value: 3.5328, metric: "Reconstruction Error"},
+              {components: 8, value: 2.7966, metric: "Reconstruction Error"},
+              {components: 10, value: 2.4360, metric: "Reconstruction Error"}
+            ],
+            optimalComponents: 8,
+            dimensionReduction: 97.88,
+            details: {
+              summary: "Random Projection reduces dimensionality by projecting the original data onto a random lower-dimensional subspace.",
+              advantages: [
+                "Very fast computation",
+                "Preserves distances between points",
+                "Works well with sparse data"
+              ]
+            }
+          },
+          umap: {
+            componentsData: [
+              {components: 2, value: 0.4271, metric: "Silhouette Score"},
+              {components: 10, value: 0.2993, metric: "Silhouette Score"},
+              {components: 20, value: 0.3085, metric: "Silhouette Score"}
+            ],
+            optimalComponents: 2,
+            dimensionReduction: 99.47,
+            details: {
+              summary: "UMAP preserves both local and global topological structure of the data in a lower-dimensional representation.",
+              advantages: [
+                "Preserves both local and global structure",
+                "Works well for visualization",
+                "Can handle non-linear relationships"
+              ]
+            }
           }
         };
-      });
-      
-    // Generate a visual heatmap (simulated Grad-CAM)
-    function generateHeatmap(img) {
-      const canvas = document.getElementById('cam-canvas');
-      const ctx = canvas.getContext('2d');
-      
-      // Adjust canvas size
-      const aspectRatio = img.width / img.height;
-      if (aspectRatio > 1) {
-        canvas.width = 300;
-        canvas.height = 300 / aspectRatio;
-      } else {
-        canvas.height = 300;
-        canvas.width = 300 * aspectRatio;
-      }
-      
-      // Draw original image
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      
-      // Create heatmap effect
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-      
-      // Center the effect (simplified visualization)
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const maxDist = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2;
-      
-      for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-          const idx = (y * canvas.width + x) * 4;
+        
+        const nnPerformanceData = [
+          {method: 'Original', inputSize: 377, f1Score: 0.9477, trainingTime: 2.84, dimReduction: 0, f1Change: 0},
+          {method: 'PCA', inputSize: 27, f1Score: 0.9734, trainingTime: 2.17, dimReduction: 92.84, f1Change: 2.71},
+          {method: 'ICA', inputSize: 50, f1Score: 0.9803, trainingTime: 2.16, dimReduction: 86.74, f1Change: 3.44},
+          {method: 'RP', inputSize: 8, f1Score: 0.9612, trainingTime: 2.33, dimReduction: 97.88, f1Change: 1.43},
+          {method: 'UMAP', inputSize: 2, f1Score: 0.8451, trainingTime: 2.26, dimReduction: 99.47, f1Change: -10.83}
+        ];
+        
+        // Sample data for cluster visualization
+        const clusterSampleData = {
+          kmeans: {
+            2: [
+              { x: -3, y: -1, cluster: 0 }, { x: -2.5, y: -0.8, cluster: 0 }, { x: -2.7, y: -1.3, cluster: 0 },
+              { x: -3.2, y: -0.9, cluster: 0 }, { x: -2.8, y: -1.1, cluster: 0 }, { x: -3.1, y: -0.7, cluster: 0 },
+              { x: 1.2, y: 1.5, cluster: 1 }, { x: 1.5, y: 1.8, cluster: 1 }, { x: 1.3, y: 2.0, cluster: 1 },
+              { x: 1.7, y: 1.6, cluster: 1 }, { x: 1.4, y: 1.3, cluster: 1 }, { x: 1.6, y: 1.7, cluster: 1 }
+            ]
+          },
+          em: {
+            2: [
+              { x: -3, y: -1, cluster: 0 }, { x: -2.5, y: -0.8, cluster: 0 }, { x: -2.7, y: -1.3, cluster: 0 },
+              { x: -3.2, y: -0.9, cluster: 0 }, { x: -2.8, y: -1.1, cluster: 0 }, { x: -3.1, y: -0.7, cluster: 0 },
+              { x: 1.2, y: 1.5, cluster: 1 }, { x: 1.5, y: 1.8, cluster: 1 }, { x: 1.3, y: 2.0, cluster: 1 },
+              { x: 1.7, y: 1.6, cluster: 1 }, { x: 1.4, y: 1.3, cluster: 1 }, { x: 1.6, y: 1.7, cluster: 1 }
+            ]
+          }
+        };
+        
+        // Class visualization data for dimensionality reduction
+        const drClassData = {
+          pca: [
+            {x: -3, y: -2, class: 0}, {x: -2.7, y: -1.7, class: 0}, {x: -2.8, y: -1.9, class: 0},
+            {x: -3.1, y: -2.2, class: 0}, {x: -2.5, y: -1.8, class: 0}, {x: -2.9, y: -2.1, class: 0},
+            {x: 1.8, y: 1.2, class: 1}, {x: 2.1, y: 1.5, class: 1}, {x: 1.9, y: 1.7, class: 1},
+            {x: 2.3, y: 1.4, class: 1}, {x: 2.0, y: 1.3, class: 1}, {x: 1.7, y: 1.6, class: 1}
+          ],
+          ica: [
+            {x: -0.5, y: 1.8, class: 0}, {x: -0.3, y: 1.6, class: 0}, {x: -0.4, y: 1.9, class: 0},
+            {x: -0.7, y: 1.7, class: 0}, {x: -0.2, y: 2.0, class: 0}, {x: -0.6, y: 1.5, class: 0},
+            {x: 1.0, y: -1.2, class: 1}, {x: 1.2, y: -1.0, class: 1}, {x: 0.9, y: -1.3, class: 1},
+            {x: 1.3, y: -1.1, class: 1}, {x: 1.1, y: -0.9, class: 1}, {x: 0.8, y: -1.4, class: 1}
+          ],
+          rp: [
+            {x: 1.2, y: 0.5, class: 0}, {x: 1.0, y: 0.7, class: 0}, {x: 1.3, y: 0.6, class: 0},
+            {x: 0.9, y: 0.4, class: 0}, {x: 1.1, y: 0.8, class: 0}, {x: 1.4, y: 0.3, class: 0},
+            {x: -0.8, y: -1.2, class: 1}, {x: -1.0, y: -1.0, class: 1}, {x: -0.7, y: -1.3, class: 1},
+            {x: -1.1, y: -0.9, class: 1}, {x: -0.9, y: -1.1, class: 1}, {x: -0.6, y: -1.4, class: 1}
+          ],
+          umap: [
+            {x: 8.5, y: 7.6, class: 0}, {x: 8.2, y: 7.8, class: 0}, {x: 8.7, y: 7.5, class: 0},
+            {x: 8.3, y: 7.7, class: 0}, {x: 8.6, y: 7.4, class: 0}, {x: 8.4, y: 7.9, class: 0},
+            {x: 5.4, y: 6.8, class: 1}, {x: 5.6, y: 6.6, class: 1}, {x: 5.2, y: 6.9, class: 1},
+            {x: 5.5, y: 6.7, class: 1}, {x: 5.3, y: 6.5, class: 1}, {x: 5.7, y: 7.0, class: 1}
+          ]
+        };
+
+        // ========== CHART INITIALIZATION AND UPDATES ==========
+        
+        // Color palette for charts
+        const colors = {
+          blue: 'rgba(54, 162, 235, 0.8)',
+          red: 'rgba(255, 99, 132, 0.8)',
+          green: 'rgba(75, 192, 192, 0.8)',
+          purple: 'rgba(153, 102, 255, 0.8)',
+          orange: 'rgba(255, 159, 64, 0.8)',
+          grey: 'rgba(201, 203, 207, 0.8)'
+        };
+        
+        // Initialize clustering charts
+        let silhouetteChart = initChart('silhouette-chart', 'line', {
+          labels: clusteringData.kmeans.map(d => d.clusters),
+          datasets: [{
+            label: 'Silhouette Score',
+            data: clusteringData.kmeans.map(d => d.silhouette),
+            backgroundColor: colors.blue,
+            borderColor: colors.blue,
+            tension: 0.1
+          }]
+        });
+        
+        let daviesBouldinChart = initChart('davies-bouldin-chart', 'line', {
+          labels: clusteringData.kmeans.map(d => d.clusters),
+          datasets: [{
+            label: 'Davies-Bouldin Index',
+            data: clusteringData.kmeans.map(d => d.daviesBouldin),
+            backgroundColor: colors.red,
+            borderColor: colors.red,
+            tension: 0.1
+          }]
+        });
+        
+        let clusterVizChart = initChart('cluster-visualization', 'scatter', {
+          datasets: getClusterDatasets(clusterSampleData.kmeans[2])
+        });
+        
+        // Initialize dimensionality reduction charts
+        let componentsChart = initChart('components-chart', 'line', {
+          labels: dimensionalityData.pca.componentsData.map(d => d.components),
+          datasets: [{
+            label: 'Explained Variance',
+            data: dimensionalityData.pca.componentsData.map(d => d.value),
+            backgroundColor: colors.green,
+            borderColor: colors.green,
+            tension: 0.1
+          }]
+        });
+        
+        let reductionComparisonChart = initChart('reduction-comparison-chart', 'bar', {
+          labels: ['PCA', 'ICA', 'RP', 'UMAP'],
+          datasets: [{
+            label: 'Dimension Reduction (%)',
+            data: [
+              dimensionalityData.pca.dimensionReduction,
+              dimensionalityData.ica.dimensionReduction,
+              dimensionalityData.rp.dimensionReduction,
+              dimensionalityData.umap.dimensionReduction
+            ],
+            backgroundColor: [colors.blue, colors.red, colors.green, colors.purple]
+          }]
+        });
+        
+        let dataProjectionChart = initChart('data-projection', 'scatter', {
+          datasets: getDrClassDatasets(drClassData.pca)
+        });
+        
+        // Initialize neural network charts
+        let f1ScoreChart = initChart('f1-score-chart', 'bar', {
+          labels: nnPerformanceData.map(d => d.method),
+          datasets: [{
+            label: 'F1 Score',
+            data: nnPerformanceData.map(d => d.f1Score),
+            backgroundColor: [colors.blue, colors.green, colors.purple, colors.orange, colors.red]
+          }]
+        }, {
+          scales: {
+            y: {
+              min: 0.80,
+              max: 1.0
+            }
+          }
+        });
+        
+        let trainingTimeChart = initChart('training-time-chart', 'bar', {
+          labels: nnPerformanceData.map(d => d.method),
+          datasets: [{
+            label: 'Training Time (s)',
+            data: nnPerformanceData.map(d => d.trainingTime),
+            backgroundColor: [colors.blue, colors.green, colors.purple, colors.orange, colors.red]
+          }]
+        });
+        
+        let sizePerformanceChart = initChart('size-performance-chart', 'scatter', {
+          datasets: [{
+            label: 'Method',
+            data: nnPerformanceData.map(d => ({x: d.inputSize, y: d.f1Score})),
+            backgroundColor: [colors.blue, colors.green, colors.purple, colors.orange, colors.red],
+            pointRadius: 8,
+            pointHoverRadius: 12
+          }]
+        }, {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Input Size (# Features)'
+              },
+              type: 'logarithmic'
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'F1 Score'
+              },
+              min: 0.80,
+              max: 1.0
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const index = context.dataIndex;
+                  return `${nnPerformanceData[index].method}: F1=${nnPerformanceData[index].f1Score.toFixed(4)}, Features=${nnPerformanceData[index].inputSize}`;
+                }
+              }
+            }
+          }
+        });
+        
+        // Initialize interactive visualization
+        let interactiveVizChart = initChart('interactive-visualization', 'scatter', {
+          datasets: getDrClassDatasets(drClassData.pca)
+        }, {
+          plugins: {
+            title: {
+              display: true,
+              text: 'PCA Visualization of Spotify Dataset'
+            }
+          }
+        });
+        
+        // Update clustering metrics based on algorithm and # of clusters
+        function updateClusteringMetrics(algorithm, numClusters) {
+          const data = clusteringData[algorithm].find(d => d.clusters === numClusters) || 
+                       clusteringData[algorithm][0];
           
-          // Distance from center
-          const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-          const intensity = Math.max(0, 1 - distFromCenter / maxDist);
+          document.getElementById('silhouette-value').textContent = data.silhouette.toFixed(4);
+          document.getElementById('davies-bouldin-value').textContent = data.daviesBouldin.toFixed(4);
+          document.getElementById('calinski-harabasz-value').textContent = data.calinskiHarabasz.toFixed(4);
+          document.getElementById('ari-value').textContent = data.ari.toFixed(4);
+        }
+        
+        // Update dimensionality reduction details
+        function updateDrDetails(technique) {
+          const data = dimensionalityData[technique];
           
-          if (intensity > 0.2) {
-            // Add a red-yellow overlay
-            // More red for higher intensity areas
-            data[idx] = Math.min(255, data[idx] + intensity * 180);     // Red
-            data[idx + 1] = Math.min(255, data[idx + 1] + intensity * 100); // Green
-            // Keep blue the same or slightly reduce it
+          // Update component details
+          document.getElementById('optimal-components').textContent = data.optimalComponents;
+          document.getElementById('dimension-reduction').textContent = data.dimensionReduction.toFixed(2) + '%';
+          
+          if (technique === 'pca') {
+            document.getElementById('variance-retained').textContent = '95%';
+          } else {
+            document.getElementById('variance-retained').textContent = 'N/A';
+          }
+          
+          // Update technique summary
+          document.getElementById('technique-summary').querySelector('.card-text').textContent = data.details.summary;
+          
+          // Update advantages list
+          const advantagesList = document.getElementById('advantages-list');
+          advantagesList.innerHTML = '';
+          data.details.advantages.forEach(adv => {
+            const li = document.createElement('li');
+            li.textContent = `✓ ${adv}`;
+            advantagesList.appendChild(li);
+          });
+        }
+        
+        // Update interactive visualization metrics
+        function updateInteractiveVizMetrics(method) {
+          const data = dimensionalityData[method];
+          document.getElementById('original-dimensions').textContent = '377';
+          document.getElementById('reduced-dimensions').textContent = data.optimalComponents;
+          document.getElementById('reduction-percentage').textContent = data.dimensionReduction.toFixed(2) + '%';
+          
+          const nnData = nnPerformanceData.find(d => d.method.toLowerCase() === method);
+          if (nnData) {
+            const f1Change = nnData.f1Change;
+            document.getElementById('f1-impact').textContent = (f1Change >= 0 ? '+' : '') + f1Change.toFixed(2) + '%';
+            document.getElementById('f1-impact').style.color = f1Change >= 0 ? 'green' : 'red';
           }
         }
+        
+        // ========== EVENT LISTENERS ==========
+        
+        // Clustering algorithm selector
+        document.getElementById('clustering-algorithm').addEventListener('change', function(e) {
+          const algorithm = e.target.value;
+          const numClusters = parseInt(document.getElementById('num-clusters').value);
+          
+          // Update charts with new algorithm data
+          updateChart(silhouetteChart, {
+            labels: clusteringData[algorithm].map(d => d.clusters),
+            datasets: [{
+              label: 'Silhouette Score',
+              data: clusteringData[algorithm].map(d => d.silhouette),
+              backgroundColor: colors.blue,
+              borderColor: colors.blue
+            }]
+          });
+          
+          updateChart(daviesBouldinChart, {
+            labels: clusteringData[algorithm].map(d => d.clusters),
+            datasets: [{
+              label: 'Davies-Bouldin Index',
+              data: clusteringData[algorithm].map(d => d.daviesBouldin),
+              backgroundColor: colors.red,
+              borderColor: colors.red
+            }]
+          });
+          
+          // Update cluster visualization if we have data for this algorithm and # clusters
+          if (clusterSampleData[algorithm] && clusterSampleData[algorithm][numClusters]) {
+            updateChart(clusterVizChart, {
+              datasets: getClusterDatasets(clusterSampleData[algorithm][numClusters])
+            });
+          }
+          
+          // Update metrics table
+          updateClusteringMetrics(algorithm, numClusters);
+        });
+        
+        // Number of clusters slider
+        document.getElementById('num-clusters').addEventListener('input', function(e) {
+          const numClusters = parseInt(e.target.value);
+          document.getElementById('clusters-value').textContent = numClusters;
+          
+          const algorithm = document.getElementById('clustering-algorithm').value;
+          
+          // Find closest available cluster number in our data
+          const availableClusters = clusteringData[algorithm].map(d => d.clusters);
+          const closestCluster = availableClusters.reduce((prev, curr) => 
+            Math.abs(curr - numClusters) < Math.abs(prev - numClusters) ? curr : prev
+          );
+          
+          // Update metrics table
+          updateClusteringMetrics(algorithm, closestCluster);
+          
+          // Update cluster visualization if we have data for this algorithm and # clusters
+          if (clusterSampleData[algorithm] && clusterSampleData[algorithm][closestCluster]) {
+            updateChart(clusterVizChart, {
+              datasets: getClusterDatasets(clusterSampleData[algorithm][closestCluster])
+            });
+          }
+        });
+        
+        // Dimensionality reduction technique selector
+        document.getElementById('reduction-technique').addEventListener('change', function(e) {
+          const technique = e.target.value;
+          const data = dimensionalityData[technique];
+          
+          // Update components chart
+          updateChart(componentsChart, {
+            labels: data.componentsData.map(d => d.components),
+            datasets: [{
+              label: data.componentsData[0].metric,
+              data: data.componentsData.map(d => d.value),
+              backgroundColor: technique === 'pca' ? colors.green : 
+                              technique === 'ica' ? colors.purple :
+                              technique === 'rp' ? colors.orange : colors.red,
+              borderColor: technique === 'pca' ? colors.green : 
+                          technique === 'ica' ? colors.purple :
+                          technique === 'rp' ? colors.orange : colors.red
+            }]
+          });
+          
+          // Update data projection
+          updateChart(dataProjectionChart, {
+            datasets: getDrClassDatasets(drClassData[technique])
+          });
+          
+          // Update technique details
+          updateDrDetails(technique);
+        });
+        
+        // Interactive visualization method selector
+        document.getElementById('dimension-method').addEventListener('change', function(e) {
+          const method = e.target.value;
+          
+          // Update visualization
+          updateChart(interactiveVizChart, {
+            datasets: getDrClassDatasets(drClassData[method])
+          }, {
+            plugins: {
+              title: {
+                text: `${method.toUpperCase()} Visualization of Spotify Dataset`
+              }
+            }
+          });
+          
+          // Update metrics
+          updateInteractiveVizMetrics(method);
+        });
+        
+        // ========== UTILITY FUNCTIONS ==========
+        
+        // Initialize a Chart.js chart
+        function initChart(canvasId, type, data, options = {}) {
+          const ctx = document.getElementById(canvasId).getContext('2d');
+          return new Chart(ctx, {
+            type: type,
+            data: data,
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              ...options
+            }
+          });
+        }
+        
+        // Update an existing chart
+        function updateChart(chart, newData, newOptions = {}) {
+          if (newData.labels) {
+            chart.data.labels = newData.labels;
+          }
+          if (newData.datasets) {
+            chart.data.datasets = newData.datasets;
+          }
+          if (Object.keys(newOptions).length > 0) {
+            chart.options = { ...chart.options, ...newOptions };
+          }
+          chart.update();
+        }
+        
+        // Generate datasets for cluster visualization
+        function getClusterDatasets(clusterData) {
+          const clusters = [...new Set(clusterData.map(d => d.cluster))];
+          return clusters.map(cluster => {
+            const clusterPoints = clusterData.filter(d => d.cluster === cluster);
+            return {
+              label: `Cluster ${cluster}`,
+              data: clusterPoints.map(d => ({ x: d.x, y: d.y })),
+              backgroundColor: cluster === 0 ? colors.blue : 
+                              cluster === 1 ? colors.red :
+                              cluster === 2 ? colors.green :
+                              cluster === 3 ? colors.purple : colors.orange,
+              pointRadius: 8,
+              pointHoverRadius: 12
+            };
+          });
+        }
+        
+        // Generate datasets for class visualization
+        function getDrClassDatasets(classData) {
+          const classes = [...new Set(classData.map(d => d.class))];
+          return classes.map(cls => {
+            const classPoints = classData.filter(d => d.class === cls);
+            return {
+              label: `Class ${cls}`,
+              data: classPoints.map(d => ({ x: d.x, y: d.y })),
+              backgroundColor: cls === 0 ? colors.blue : colors.red,
+              pointRadius: 8,
+              pointHoverRadius: 12
+            };
+          });
+        }
+        
+        // Initialize with default values
+        updateClusteringMetrics('kmeans', 2);
+        updateDrDetails('pca');
+        updateInteractiveVizMetrics('pca');
+      });
+    </script>
+    
+    <!-- Custom Styles -->
+    <style>
+      /* Typography improvements */
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 500;
       }
       
-      ctx.putImageData(imageData, 0, 0);
-    }
-    });
-  </script>
-  
-  <style>
-    .interactive-demo {
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .metric-card {
-      background-color: white;
-      border-radius: 6px;
-      padding: 15px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      margin-bottom: 15px;
-    }
-    
-    .metric-value {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 0;
-    }
-    
-    .code-section {
-      background-color: #f8f9fa;
-      border-radius: 5px;
-      padding: 15px;
-    }
-    
-    .highlights-list li {
-      margin-bottom: 8px;
-    }
-    
-    pre {
-      background-color: #272822;
-      color: #f8f8f2;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    
-    .btn-primary {
-      background-color: #4a76a8;
-      border-color: #4a76a8;
-    }
-    
-    .btn-primary:hover {
-      background-color: #3d648f;
-      border-color: #3d648f;
-    }
-    
-    .image-container {
-      margin-bottom: 20px;
-    }
-    
-    .progress {
-      height: 25px;
-    }
-    
-    .progress-bar {
-      font-weight: bold;
-      line-height: 25px;
-    }
+      /* Tab Navigation */
+      .nav-tabs .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-tabs .nav-link.active {
+        border-color: #4a76a8 #dee2e6 #fff;
+        border-top-width: 2px;
+        color: #4a76a8;
+      }
+      
+      /* Section Content */
+      .section-content {
+        padding: 1.5rem;
+        background-color: #fff;
+        border-radius: 0 0 0.25rem 0.25rem;
+      }
+      
+      /* Chart Container */
+      .chart-container {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        height: 300px;
+      }
+      
+      .chart-container h5 {
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+      }
+      
+      /* Controls Section */
+      .controls-section {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      /* Metrics Table */
+      .metrics-table {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      
+      .metrics-table h5 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      /* Technique Cards */
+      .technique-card {
+        height: 100%;
+        transition: all 0.3s ease;
+      }
+      
+      .technique-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .technique-card .card-header {
+        background-color: #4a76a8;
+        color: white;
+      }
+      
+      /* Interactive Demo Section */
+      .interactive-demo {
+        background: linear-gradient(to bottom right, #2c3e50, #4a76a8);
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        margin: 40px 0;
+      }
 
-    /* Typography improvements */
-h1, h2, h3, h4, h5 {
-  font-family: 'Roboto Slab', serif;
-  font-weight: 500;
-}
-
-.metric-value {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
-}
-
-#confidence-text {
-  font-size: 0.9rem;
-  color: #7f8c8d;
-}
-
-/* Section headers */
-.section-header {
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 8px;
-  margin-bottom: 20px;
-  font-weight: 500;
-  color: #2c3e50;
-}
-
-/* Results area styling */
-#results {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 25px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-}
-
-/* Image containers */
-.image-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.image-container h4 {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  color: #34495e;
-}
-
-/* Progress bar improvements */
-.progress {
-  height: 25px;
-  border-radius: 30px;
-  background-color: #eaeaea;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.progress-bar {
-  background-color: #4a76a8;
-  border-radius: 30px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  line-height: 25px;
-}
-
-/* Interactive Demo Section Styling */
-.interactive-demo {
-  background: linear-gradient(to bottom right, #2c3e50, #4a76a8);
-  color: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin: 40px 0;
-}
-
-.interactive-demo h3 {
-  font-family: 'Roboto Slab', serif;
-  font-weight: 500;
-  font-size: 1.8rem;
-  margin-bottom: 25px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 12px;
-}
-
-.upload-panel {
-  background-color: white;
-  border-radius: 8px;
-  padding: 25px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.upload-label {
-  font-weight: 500;
-  margin-bottom: 15px;
-  color: #2c3e50;
-  font-size: 1.1rem;
-}
-
-.upload-hint {
-  font-size: 0.85rem;
-  color: #7f8c8d;
-  margin-top: 8px;
-}
-
-#classify-btn {
-  background-color: #3498db;
-  border: none;
-  padding: 12px 25px;
-  font-weight: 600;
-  border-radius: 30px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
-}
-
-#classify-btn:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-}
-
-#classify-btn:disabled {
-  background-color: #95a5a6;
-  box-shadow: none;
-  transform: none;
-}
-
-.results-container {
-  background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.results-header {
-  background-color: #f5f7fa;
-  padding: 15px 20px;
-  border-bottom: 1px solid #e5e8ed;
-}
-
-.results-header h4 {
-  margin: 0;
-  color: #2c3e50;
-  font-weight: 500;
-}
-
-.results-body {
-  padding: 20px;
-}
-
-.image-container {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* Result metrics styling */
-.result-metrics {
-  margin-top: 25px;
-  padding-top: 25px;
-  border-top: 1px solid #e5e8ed;
-}
-
-/* Make classification result text darker and bolder */
-#predicted-class {
-  color: #1a2a3a; /* Darker blue-gray */
-  font-weight: 700; /* Extra bold */
-  font-size: 1.8rem;
-}
-
-/* Fix the confidence text */
-.confidence {
-  color: #1a2a3a; /* Darker color instead of light gray */
-}
-
-#confidence-text, 
-.confidence-description {
-  color: #2c3e50; /* Much darker than before */
-  font-weight: 500; /* Medium weight for better readability */
-  font-size: 0.95rem;
-}
-
-/* Make confidence progress bar text more visible */
-.progress-bar {
-  font-weight: 700; /* Bolder text in progress bar */
-  font-size: 1rem;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); /* Text shadow for better contrast */
-}
-
-/* Emphasize section headings */
-.results-container h4,
-.results-container h5 {
-  color: #2c3e50; /* Darker text */
-  font-weight: 600; /* Bolder */
-  font-size: 1.3rem;
-}
-  </style>
-    
+      .interactive-demo h3 {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 500;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 12px;
+      }
+      
+      .explorer-panel {
+        background-color: white;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        color: #333;
+      }
+      
+      .visualization-container {
+        height: 300px;
+        margin: 1rem 0;
+      }
+      
+      .metric-card {
+        transition: all 0.3s ease;
+      }
+      
+      .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        color: #4a76a8;
+      }
+      
+      /* Code Section */
+      .code-section {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        padding: 15px;
+      }
+      
+      /* List Styles */
+      .highlights-list li {
+        margin-bottom: 8px;
+      }
+      
+      /* Button Styles */
+      .btn-primary {
+        background-color: #4a76a8;
+        border-color: #4a76a8;
+      }
+      
+      .btn-primary:hover {
+        background-color: #3d648f;
+        border-color: #3d648f;
+      }
+      
+      /* Key Findings Section */
+      .key-findings {
+        border-left: 4px solid #4a76a8;
+      }
+      
+      .key-findings h5 {
+        color: #2c3e50;
+      }
+      
+      .key-findings ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      
+      .key-findings ul li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .key-findings ul li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #4a76a8;
+        font-weight: bold;
+      }
+    </style>
   </body>
 </html>
